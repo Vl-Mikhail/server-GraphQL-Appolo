@@ -1,6 +1,7 @@
 import faker from 'faker';
 
 import News from '../models/News';
+import User from '../models/User';
 
 const NEWS_TOTAL = 10;
 
@@ -8,6 +9,7 @@ const NEWS_TOTAL = 10;
 export default async () => {
     try {
         await News.remove();
+        await User.remove();
 
         await Array.from({ length: NEWS_TOTAL }).forEach(
             async () => await News.create({ text: faker.lorem.paragraphs(1) }),

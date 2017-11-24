@@ -12,6 +12,17 @@ export default `
     type Status {
         message: String!
     }
+
+    type User {
+        _id: ID!
+        username: String
+        email: String!
+        firstName: String
+        lastName: String
+        avatar: String
+        createdAt: Date!
+        updatedAt: Date!
+    }
     
     type New {
         _id: ID!
@@ -31,6 +42,8 @@ export default `
         createNew(text: String!): New
         updateNew(_id: ID!, text: String): New
         deleteNew(_id: ID!): Status
+        signup(email: String!, fullName: String!, password: String!, avatar: String, username: String): User
+        login(email: String!, password: String!): User
     }
 
     schema {
