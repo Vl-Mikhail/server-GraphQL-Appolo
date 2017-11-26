@@ -8,6 +8,7 @@ export default {
     Query: {
         getNew: NewsResolvers.getNew,
         getNews: NewsResolvers.getNews,
+        me: UserResolvers.me
     },
     Mutation: {
         createNew: NewsResolvers.createNew,
