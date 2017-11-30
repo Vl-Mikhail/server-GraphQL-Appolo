@@ -23,10 +23,20 @@ export default {
         }
     },
 
+    //Получем статьи от Пользователя
+    getUserNews: async (_, args, { user }) => {
+        try {
+            await requireAuth(user);
+            return News.find({ user: user._id }).sort({ createdAt: -1 })
+        } catch (error) {
+            throw error;
+        }
+    },
+
     createNew: async (_, args, { user }) => {
         try {
             await requireAuth(user);
-            return News.create(args);
+            return News.create({ ...args, user: user._id });
         } catch (error) {
             throw error;
         }
@@ -35,7 +45,20 @@ export default {
     updateNew: async (_, { _id, ...rest }, { user }) => {
         try {
             await requireAuth(user);
-            return News.findByIdAndUpdate(_id, rest, { new: true });
+            // return News.findByIdAndUpdate(_id, rest, { new: true });
+
+            // Обновлять может только тот кто создал статью
+            const article = await News.findOne({ _id, user: user._id });
+
+            if (!article) {
+                throw new Error('Not found!');
+            }
+
+            Object.entries(rest).forEach(([key, value]) => {
+                article[key] = value;
+            });
+
+            return article.save();
         } catch (error) {
             throw error;
         }
@@ -43,7 +66,13 @@ export default {
 
     deleteNew: async (_, { _id }) => {
         try {
-            await News.findByIdAndRemove(_id);
+            const article = await News.findOne({ _id, user: user._id });
+
+            if (!article) {
+                throw new Error('Not found!');
+            }
+
+            await article.remove();
             return {
                 message: 'Delete Success!',
             };

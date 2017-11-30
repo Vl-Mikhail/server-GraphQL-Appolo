@@ -42,7 +42,9 @@ export default `
     
     type New {
         _id: ID!
-        text: String
+        text: String!
+        user: User!
+        favoriteCount: Int!
         createdAt: Date!
         updatedAt: Date!
     }
@@ -51,6 +53,7 @@ export default `
     type Query {
         getNew(_id: ID!): New
         getNews: [New]
+        getUserNews: [New]
         me: Me
     }
 
